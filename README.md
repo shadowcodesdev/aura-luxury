@@ -1,149 +1,117 @@
-# AURA LUXURY HAUTE — 3D CONFIGURATOR
+# AURA LUXURY HAUTE
 
-### `REF. ALH-PBR — ANISOTROPIC SHEEN MODEL` // `02 // PROCEDURAL SHADER GRAPH`
+<p align="center">
+  <strong>Photorealistic textile. Procedural craft. Real-time performance.</strong>
+</p>
 
-> Ultra-high-fidelity luxury fashion digital twin rendering draped textiles with procedural weave micro-relief and physical anisotropic microfiber sheen at locked 60–120 FPS.
-> 
-> 
+<p align="center">
+  <a href="https://aura-luxury-haute-3d.vercel.app"><strong>✦ Open the live configurator →</strong></a>
+</p>
+
+<p align="center">
+  <a href="https://aura-luxury-haute-3d.vercel.app"><img src="https://img.shields.io/badge/Live%20Preview-aura--luxury--haute--3d.vercel.app-c9a46c?style=for-the-badge&logo=vercel&logoColor=white" alt="Live preview" /></a>
+  <img src="https://img.shields.io/badge/Three.js-3D%20Rendering-black?style=for-the-badge&logo=threedotjs&logoColor=white" alt="Three.js" />
+  <img src="https://img.shields.io/badge/GLSL%20ES%203.0-Procedural%20Shaders-8b6f47?style=for-the-badge" alt="GLSL ES 3.0" />
+</p>
 
 ---
 
-### Core Performance Benchmarks
+## The experience
 
+**AURA LUXURY HAUTE** is an ultra-high-fidelity 3D fashion configurator built around a digital twin of draped luxury textile. Instead of relying on heavyweight 8K texture stacks, the surface is composed in real time with custom GLSL: woven micro-relief, directional microfiber sheen, fold transmission, and tactile friction audio.
+
+> **Reference ALH-PBR** · Anisotropic Sheen Model · Procedural Shader Graph
+
+<div align="center">
+  <a href="https://aura-luxury-haute-3d.vercel.app"><strong>Experience the live preview</strong></a><br />
+  <sub>Best experienced with sound enabled and a modern WebGL 2 browser.</sub>
+</div>
+
+## Performance, by design
+
+| Target | Budget |
+| --- | --- |
+| **Frame rate** | Locked 60 FPS on mobile silicon · 120 FPS on discrete desktop GPUs |
+| **GPU payload** | ≤ 25 MB total texture memory through procedural shading |
+| **Time to interact** | ≤ 1.2 s on 4G networks |
+| **Geometry** | 45k-vertex draped textile mesh + 1.2k-vertex brutalist pedestal |
+| **Thermals** | Sustained interactive orbit without thermal throttling |
+
+## Architecture
+
+```text
+┌──────────────────────────┐       ┌─────────────────────────────┐
+│ Touch / Pointer Inertia  │──────▶│ Dynamic Resolution Control  │
+└──────────────────────────┘       └──────────────┬──────────────┘
+                                                  │
+                 ┌────────────────────────────────┴────────────────────────┐
+                 ▼                                                         ▼
+      ┌──────────────────────┐                              ┌────────────────────────┐
+      │ WebAudio Spatial     │                              │ Three.js Scene Graph   │
+      │ Friction Synthesizer │                              │ Custom PBR Material    │
+      └──────────────────────┘                              └────────────┬───────────┘
+                                                                        │
+                                     ┌──────────────────────────────────┴──────────────────────────────────┐
+                                     ▼                                                                     ▼
+                          ┌────────────────────────┐                                      ┌────────────────────────┐
+                          │ Procedural Weave Graph │                                      │ Anisotropic Sheen BRDF │
+                          │ FBM relief + yarn twist│                                      │ GGX + directional fiber│
+                          └────────────────────────┘                                      └────────────────────────┘
 ```
-[ TARGET FRAMERATE ]  Locked 60 FPS (Mobile Silicon) / 120 FPS (Discrete Desktop GPU)
-[ TEXTURE MEMORY ]    <= 25 MB total GPU payload (Procedural math over 8K bitmaps)
-[ TIME TO INTERACT ]  <= 1.2s on 4G networks
-[ THERMAL BUDGET ]    Zero thermal throttling during sustained interactive orbit
-[ GEOMETRY FOOTPRINT] 45k vertex draped textile mesh + 1.2k vertex brutalist cast pedestal
 
-```
+## What makes it feel real
 
----
+- **Procedural twill shader graph** — A mathematical cellular weave evaluator replaces multi-layer diffuse, normal, and roughness maps.
+- **Anisotropic GGX highlights** — Explicit tangent and bitangent vectors reproduce the directional sheen of twill and wool fibers.
+- **Subsurface transmission wrap** — Fold-aware edge lighting suggests micro-light transmission through thin textile surfaces.
+- **Procedural friction audio** — Native WebAudio buffers generate tactile contact sound without downloading audio assets.
+- **Editorial chiaroscuro** — A 50/50 split-frame presentation pairs Didone-inspired typography with a pitch-black viewport.
+- **Adaptive rendering** — Dynamic resolution scaling protects the frame-rate target across mobile and desktop hardware.
 
-### Low-Level Technical Architecture
+## Technology
 
-```
-[Touch / Pointer Inertia Controller] ──▶ [Dynamic Resolution Controller (DRS)]
-                                                    │
-                                                    ▼
-   [WebAudio Spatial Engine]            [Three.js Scene Graph]
-(Contact-Friction Synthesizer)                      │
-                                                    ▼
-                                    [Custom PBR GLSL Material]
-                         ┌──────────────────────────┴──────────────────────────┐
-                         ▼                                                     ▼
-              [Procedural Weave Graph]                             [Anisotropic Sheen BRDF]
-         (FBM Micro-Heightmap + Yarn Twist)                    (GGX-Kajiya-Kay Directional Spline)
+| Layer | Implementation |
+| --- | --- |
+| Framework | Next.js · App Router |
+| 3D engine | Three.js · `RawShaderMaterial` · custom shader pipeline |
+| Shading | GLSL ES 3.0 · procedural cellular noise · anisotropic BRDF |
+| Audio | WebAudio API · zero-asset procedural band-pass noise engine |
+| Deployment | Vercel Edge Network |
 
-```
+## Shader core
 
----
-
-### Technical Highlights
-
-* **Procedural Twill Shader Graph:** Replaces heavy multi-layer 8K diffuse, normal, and roughness maps with a mathematical cellular weave evaluator in GLSL. Evaluates thread frequency and yarn twists directly in the fragment stage.
-
-
-* **Anisotropic GGX Specular Distribution:** Modifies the microfacet specular distribution using explicit surface bitangent vectors to simulate directional fiber sheen on twill and wool.
-
-
-* **Subsurface Transmission Wrap:** Models micro-light transmission across textile folds using inverted surface normal dot products factored against edge thickness approximations.
-
-
-* **Real-Time WebAudio Friction Synthesizer:** Generates interactive textile tactile audio entirely through native WebAudio buffers without downloading audio assets. Dynamically modulates a bandpass filter between 800 Hz and 2400 Hz based on cursor angular velocity to simulate raw linen friction.
-
-
-* **Editorial Chiaroscuro Presentation:** Balanced 50/50 split-frame layout marrying editorial Didone typography with pitch-black (`#000000`) high-contrast viewport shading.
-
-
-
----
-
-### Tech Stack
-
-* **Framework:** Next.js (App Router)
-
-
-* **3D Core:** Three.js (`RawShaderMaterial` / Custom Shader Pipeline)
-
-
-* **Shading Language:** GLSL ES 3.0 (Procedural Cellular Noise & Anisotropic BRDF)
-
-
-* **Audio Synthesis:** WebAudio API (Zero-asset procedural bandpass noise engine)
-
-
-* **Deployment:** Vercel Edge Network
-
-
-
----
-
-### Material Shader Implementation (GLSL ES 3.0 Fragment)
-
-Surface relief, GGX microfacet distribution, and subsurface transmission are calculated directly in hardware:
+The fragment shader calculates woven surface relief, anisotropic microfacet distribution, and subsurface transmission directly on the GPU:
 
 ```glsl
-#version 300 es
-precision highp float;
-
-in vec3 v_worldPosition;
-in vec3 v_worldNormal;
-in vec4 v_worldTangent;
-in vec2 v_uv;
-
-uniform vec3 u_cameraPosition;
-uniform vec3 u_lightPosition;
-uniform vec3 u_baseColor;
-uniform float u_roughnessX;
-uniform float u_roughnessY;
-uniform float u_sheenIntensity;
-
-out vec4 fragColor;
-
-const float PI = 3.14159265359;
-
 float getProceduralWeave(vec2 uv) {
     vec2 p = uv * 350.0;
     float threadA = cos(p.x) * sin(p.y);
     float threadB = sin(p.x) * cos(p.y);
-    return mix(threadA, threadB, step(0.0, sin(p.x * 0.5 + p.y * 0.5))) * 0.08;
+    return mix(threadA, threadB,
+        step(0.0, sin(p.x * 0.5 + p.y * 0.5))) * 0.08;
 }
 
-float D_GGX_Anisotropic(float NoH, float ToH, float BoH, float ax, float ay) {
+float D_GGX_Anisotropic(
+    float NoH, float ToH, float BoH, float ax, float ay
+) {
     float a2 = ax * ay;
     vec3 v = vec3(ay * ToH, ax * BoH, a2 * NoH);
     float v2 = dot(v, v);
     float w2 = a2 / v2;
     return a2 * w2 * w2 * (1.0 / PI);
 }
-
-void main() {
-    vec3 N = normalize(v_worldNormal);
-    vec3 T = normalize(v_worldTangent.xyz);
-    vec3 B = normalize(cross(N, T) * v_worldTangent.w);
-    
-    float weave = getProceduralWeave(v_uv);
-    N = normalize(N + T * weave * 0.4 + B * weave * 0.4);
-    
-    vec3 V = normalize(u_cameraPosition - v_worldPosition);
-    vec3 L = normalize(u_lightPosition - v_worldPosition);
-    vec3 H = normalize(V + L);
-    
-    float NoV = max(dot(N, V), 0.001);
-    float NoL = max(dot(N, L), 0.001);
-    float NoH = max(dot(N, H), 0.001);
-    float ToH = dot(T, H);
-    float BoH = dot(B, H);
-    
-    float D = D_GGX_Anisotropic(NoH, ToH, BoH, u_roughnessX, u_roughnessY);
-    float sheenDist = pow(1.0 - NoH, 4.0) * u_sheenIntensity;
-    float sss = smoothstep(0.0, 1.0, dot(-V, L) * 0.5 + 0.5) * 0.25;
-    
-    vec3 diffuse = u_baseColor * (NoL + sss);
-    vec3 finalColor = diffuse + (D * sheenDist * vec3(0.95, 0.90, 0.85));
-    fragColor = vec4(finalColor, 1.0);
-}
-
 ```
+
+## Try it live
+
+<a href="https://aura-luxury-haute-3d.vercel.app">
+  <img src="https://img.shields.io/badge/LAUNCH%20AURA%20LUXURY%20HAUTE-c9a46c?style=for-the-badge&logo=vercel&logoColor=white" alt="Launch AURA LUXURY HAUTE" />
+</a>
+
+The live experience is available at **[aura-luxury-haute-3d.vercel.app](https://aura-luxury-haute-3d.vercel.app)**.
+
+---
+
+<p align="center">
+  <sub>ALH-PBR · Procedural textile rendering for the web.</sub>
+</p>
